@@ -1,0 +1,7 @@
+--- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/INFOMCPE/ITransfer
+branches:
+- master
+projects:
+  ITransfer:
+    path: ""
+...
