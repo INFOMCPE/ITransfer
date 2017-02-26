@@ -24,7 +24,7 @@ class ITransfer extends PluginBase implements Listener {
                if(!file_exists($this->getDataFolder().'lang.json')){
                    $this->languageInitialization();
                }
-            $this->getServer()->getScheduler()->scheduleRepeatingTask(new Timer($this), 20 * 120);  
+            //$this->getServer()->getScheduler()->scheduleRepeatingTask(new Timer($this), 20 * 120);  
             $this->session = $this->getServer()->getPluginManager()->getPlugin("SessionAPI");
             if ($this->getServer()->getPluginManager()->getPlugin("PluginDownloader")) {
             $this->getServer()->getScheduler()->scheduleAsyncTask(new CheckVersionTask($this, 332));
