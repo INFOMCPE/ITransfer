@@ -14,6 +14,7 @@ use pocketmine\utils\Utils;
 use pocketmine\Server;
 use pocketmine\item\Item;
 use pocketmine\scheduler\PluginTask;
+use pocketmine\tile\Sign;
 
 class ITransfer extends PluginBase implements Listener {
      const Prfix = '§f[§aITransfer§f]§e ';
@@ -24,7 +25,8 @@ class ITransfer extends PluginBase implements Listener {
                if(!file_exists($this->getDataFolder().'lang.json')){
                    $this->languageInitialization();
                }
-            //$this->getServer()->getScheduler()->scheduleRepeatingTask(new Timer($this), 20 * 120);  
+               
+            $this->getServer()->getScheduler()->scheduleRepeatingTask(new Timer($this), 20 * $this->getConfig()->get("interval"));  
             $this->session = $this->getServer()->getPluginManager()->getPlugin("SessionAPI");
             if ($this->getServer()->getPluginManager()->getPlugin("PluginDownloader")) {
             $this->getServer()->getScheduler()->scheduleAsyncTask(new CheckVersionTask($this, 332));
@@ -43,32 +45,49 @@ class ITransfer extends PluginBase implements Listener {
        public function onCommand(CommandSender $sender, Command $command, $label, array $args){
 		switch($command->getName()){
                     case 'transfer':
-                        if($args[0] == 'help' && $args[1] == NULL){
-                            $sender->sendMessage(ITransfer::Prfix.$this->lang('main'));
-                        }else if($args[0] == NULL){
-                            $sender->sendMessage(ITransfer::Prfix.$this->lang('no_ip'));
-                        }
-                        if($args[0] != null && $args[0] != 'addsign' ){
-                            $this->transfer($args[0], $sender );
-                        }
-                        if($args[0] == 'addsign'){
-                            $this->session->createSession(strtolower($sender->getName()), 'stat',0);
+                        switch ($args[0]) {
+                            case 'help':
+                $sender->sendMessage($this->lang('main'));
+                                break;
+                            case 'connect':
+                                      $server = explode(":", $args[1]);
+                                      $ip = $server[0];
+                                      $port = $server[1];
+                                      if($ip != null){
+                                        if($port != null){
+                                           $this->transfer($args[1], $sender );
+                                        }else{
+                                             $sender->sendMessage(ITransfer::Prfix.$this->lang('no_port'));
+                                        }
+                                      }else{
+                                          $sender->sendMessage(ITransfer::Prfix.$this->lang('no_ip'));
+                                      }
+                                break;
+                            case 'addsign':
+                            $this->session->createSession(strtolower($sender->getName()), 'stat',3);
                             $sender->sendMessage(ITransfer::Prfix.$this->lang("press_send_1"));
+                                break;
+                            case 'update':
+                                $this->signTask();
+                                break;
+                          
                         }
-                    break;
+                          if($args[0] == null && $args[1] == null){
+                                $sender->sendMessage($this->lang('main'));
+                            }
                 }
        }
         public function onChat(PlayerChatEvent $event) {
             $player = $event->getPlayer();
             $message = $event->getMessage();
-            if($this->session->getSessionData(strtolower($player->getName()), 'stat') == 0){
+            if($this->session->getSessionData(strtolower($player->getName()), 'stat') == 3){
                 
                 $this->session->createSession(strtolower($player->getName()), 'stat', 1);
                 $this->session->createSession(strtolower($player->getName()), 'ip', $message);
                 $player->sendMessage(ITransfer::Prfix.$this->lang("press_tap"));
-                
-                }
                 $event->setCancelled(); 
+                }
+                
             
         }
          public function onBlockBreak(BlockBreakEvent $event){
@@ -114,7 +133,6 @@ class ITransfer extends PluginBase implements Listener {
 
         foreach ($this->getServer()->getLevels() as $levels) {
             foreach ($levels->getTiles() as $tile) {
-                
                 if ($tile instanceof Sign) {
                     $block = $tile->getBlock();
                     if ($tile->getText()[0] == $this->getConfig()->get("SignText") ){
@@ -122,9 +140,11 @@ class ITransfer extends PluginBase implements Listener {
              $ip = $this->dataGet($block->getX().":".$block->getY().":".$block->getZ(), 'ip');
          }
          if($ip != NULL){
-             if($this->query($ip, "hostname") != false)
-        $sign->setText($this->getConfig()->get("SignText"), $this->query($ip, 'hostname'), '§a'.$this->query($ip, 'numplayers').'§f/§e'.$this->query($ip, 'maxplayers'));
-             
+             if($this->query($ip, "hostname") != false){
+                   $tile->setText($this->getConfig()->get("SignText"), $this->query($ip, 'hostname'), '§a'.$this->query($ip, 'numplayers').'§f/§e'.$this->query($ip, 'maxplayers'));
+                            
+             }
+       
          }
                     }
                 }
