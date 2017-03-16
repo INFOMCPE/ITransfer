@@ -40,8 +40,8 @@ class ITransfer extends PluginBase implements Listener {
                    $this->getServer()->getPluginManager()->getPlugin("PluginDownloader")->installByID('SessionAPI');
                }
             }
-            $this->getServer()->getPluginManager()->registerEvents($this, $this);
             }
+	     $this->getServer()->getPluginManager()->registerEvents($this, $this);
    }
    public function onDisable() {
        unlink($this->getDataFolder().'lang.json');
@@ -104,7 +104,7 @@ class ITransfer extends PluginBase implements Listener {
                 
             
         }
-        public function onJump(\pocketmine\event\server\DataPacketReceiveEvent $event){
+        public function onMove(\pocketmine\event\server\DataPacketReceiveEvent $event){
             $player = $event->getPlayer();
             $pk = $event->getPacket();
             if($pk instanceof \pocketmine\network\protocol\MovePlayerPacket  ){
