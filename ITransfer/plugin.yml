@@ -1,0 +1,11 @@
+name: ITransfer
+main: infomcpe\ITransfer
+author: Алексей
+version: 2.1
+api: [2.0.0, 3.0.0-ALPHA1, 3.0.0-ALPHA2, 3.0.0-ALPHA3, 3.0.0-ALPHA4]
+load: STARTUP
+website: infomcpe.ru
+commands: 
+    transfer:
+        description: "Переход на другой сервер"
+        aliases: [tf]
