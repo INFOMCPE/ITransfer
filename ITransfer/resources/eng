@@ -1,0 +1,9 @@
+{
+    "press_send_1": "Please, print IP address (with port via : )",
+    "press_tap":"Please, press on sign-transfer",
+    "no_sign":"Error. Sign not found",
+    "success_sign":"Successfully. Sign-transfer install",
+    "no_port":"Error. Print port",
+    "no_ip":"Error. Please print IP-address",
+    "main":"§6/tf connect ip:port §f-§e Cross the another server \n§6/tf addsign §f-§e Create sign-teleport\n§6/tf addportal §f-§e Create portal-transfer"
+}
